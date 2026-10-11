@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDA Financial Intelligence Platform</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* LOGIN */
+        #loginPage {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #111827, #1e3a8a);
+        }
+
+        .login-card {
+            width: 420px;
+            max-width: 92%;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 15px;
+            border-radius: 16px;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: #111827;
+        }
+
+        .logo p {
+            color: #6b7280;
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .error {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: #111827;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+        }
+
+        .topbar p {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .logout-btn {
+            background: #374151;
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: #4b5563;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+        }
+
+        /* CARDS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .stat-card .label {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* MAIN GRID */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 22px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-bottom: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            font-size: 18px;
+        }
+
+        .refresh-btn {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            text-align: left;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 13px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .flagged {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .low {
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #92400e;
+            font-weight: bold;
+        }
+
+        .high, .critical {
+            color: #991b1b;
+            font-weight: bold;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .message {
+            margin-top: 12px;
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .failure {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .risk-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .risk-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px;
+            background: #f9fafb;
+            border-radius: 9px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid .full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+
+    <div class="login-card">
+
+        <div class="logo">
+            <div class="logo-icon">FI</div>
+            <h1>FDA Financial Intelligence</h1>
+            <p>Fraud Detection & Risk Assessment Platform</p>
+        </div>
+
+        <div id="loginError" class="error hidden"></div>
+
+        <form id="loginForm">
+
+            <label>Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label>Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button class="primary-btn" type="submit">
+                Sign In
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="dashboardPage" class="dashboard hidden">
+
+    <header class="topbar">
+
+        <div>
+            <h1>FDA Financial Intelligence Platform</h1>
+            <p>AI-Powered Fraud Detection & Risk Assessment</p>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+
+    </header>
+
+
+    <main class="container">
+
+        <div class="welcome">
+            <h2>Financial Risk Dashboard</h2>
+            <p>Monitor transactions and identify potentially fraudulent activity.</p>
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="label">Total Transactions</div>
+                <div class="value" id="totalTransactions">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Transaction Value</div>
+                <div class="value" id="totalAmount">₹0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Flagged / Review</div>
+                <div class="value" id="riskTransactions">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Average Risk Score</div>
+                <div class="value" id="averageRisk">0</div>
+            </div>
+
+        </section>
+
+
+        <div class="main-grid">
+
+            <!-- LEFT -->
+
+            <div>
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <h3>Transaction Monitoring</h3>
+
+                        <button
+                            class="refresh-btn"
+                            onclick="loadTransactions()"
+                        >
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Risk Score</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="transactionTable">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- RIGHT -->
+
+            <div>
+
+                <!-- ADD TRANSACTION -->
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <h3>Analyze Transaction</h3>
+                    </div>
+
+                    <form id="transactionForm">
+
+                        <div class="form-grid">
+
+                            <div class="full">
+                                <label>Transaction ID</label>
+                                <input
+                                    id="transactionId"
+                                    placeholder="TXN-2026-0003"
+                                    required
+                                >
+                            </div>
+
+                            <div>
+                                <label>Amount</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    id="amount"
+                                    placeholder="5000"
+                                    required
+                                >
+                            </div>
+
+                            <div>
+                                <label>Type</label>
+                                <select id="transactionType">
+                                    <option value="purchase">Purchase</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="international">International</option>
+                                    <option value="cash_withdrawal">Cash Withdrawal</option>
+                                </select>
+                            </div>
+
+                            <div class="full">
+                                <label>Merchant Category</label>
+                                <select id="merchantCategory">
+                                    <option value="groceries">Groceries</option>
+                                    <option value="electronics">Electronics</option>
+                                    <option value="jewelry">Jewelry</option>
+                                    <option value="cryptocurrency">Cryptocurrency</option>
+                                    <option value="gaming">Gaming</option>
+                                    <option value="travel">Travel</option>
+                                    <option value="retail">Retail</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Location</label>
+                                <input
+                                    id="location"
+                                    placeholder="Bhubaneswar"
+                                >
+                            </div>
+
+                            <div>
+                                <label>Device</label>
+                                <input
+                                    id="device"
+                                    placeholder="MacBook-Air"
+                                >
+                            </div>
+
+                            <div class="full">
+                                <label>Date & Time</label>
+                                <input
+                                    type="datetime-local"
+                                    id="transactionDate"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <button class="submit-btn" type="submit">
+                            Analyze & Save Transaction
+                        </button>
+
+                    </form>
+
+                    <div id="transactionMessage" class="message hidden"></div>
+
+                </section>
+
+
+                <!-- RISK SUMMARY -->
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <h3>Risk Distribution</h3>
+                    </div>
+
+                    <div class="risk-summary">
+
+                        <div class="risk-row">
+                            <span>Low Risk</span>
+                            <strong id="lowRisk">0</strong>
+                        </div>
+
+                        <div class="risk-row">
+                            <span>Medium Risk</span>
+                            <strong id="mediumRisk">0</strong>
+                        </div>
+
+                        <div class="risk-row">
+                            <span>High Risk</span>
+                            <strong id="highRisk">0</strong>
+                        </div>
+
+                        <div class="risk-row">
+                            <span>Critical Risk</span>
+                            <strong id="criticalRisk">0</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <div class="footer">
+        FDA Financial Intelligence Platform © 2026
+    </div>
+
+</div>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:8000";
+
+let token = localStorage.getItem("fda_token");
+
+
+/* LOGIN */
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById("email").value;
+
+        const password =
+            document.getElementById("password").value;
+
+        const errorBox =
+            document.getElementById("loginError");
+
+        errorBox.classList.add("hidden");
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/api/auth/login`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.detail || "Login failed"
+                );
+            }
+
+            token = data.access_token;
+
+            localStorage.setItem(
+                "fda_token",
+                token
+            );
+
+            showDashboard();
+
+        } catch (error) {
+
+            errorBox.textContent =
+                error.message;
+
+            errorBox.classList.remove("hidden");
+
+        }
+
+    });
+
+
+/* SHOW DASHBOARD */
+
+function showDashboard() {
+
+    document
+        .getElementById("loginPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("dashboardPage")
+        .classList.remove("hidden");
+
+    setDefaultDate();
+
+    loadTransactions();
+
+}
+
+
+/* LOGOUT */
+
+function logout() {
+
+    localStorage.removeItem("fda_token");
+
+    token = null;
+
+    document
+        .getElementById("dashboardPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginPage")
+        .classList.remove("hidden");
+
+}
+
+
+/* LOAD TRANSACTIONS */
+
+async function loadTransactions() {
+
+    if (!token) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE}/api/transactions/`,
+            {
+                headers: {
+                    "Authorization":
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+        if (response.status === 401) {
+
+            logout();
+
+            return;
+
+        }
+
+        const transactions =
+            await response.json();
+
+        renderTransactions(transactions);
+
+    } catch (error) {
+
+        console.error(
+            "Transaction loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* RENDER TRANSACTIONS */
+
+function renderTransactions(transactions) {
+
+    const table =
+        document.getElementById(
+            "transactionTable"
+        );
+
+    table.innerHTML = "";
+
+    let totalAmount = 0;
+    let totalRisk = 0;
+    let riskCount = 0;
+
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    let critical = 0;
+
+    let riskTransactions = 0;
+
+
+    transactions.forEach(transaction => {
+
+        totalAmount +=
+            parseFloat(transaction.amount || 0);
+
+        if (transaction.risk_score !== null) {
+
+            totalRisk +=
+                parseFloat(transaction.risk_score);
+
+            riskCount++;
+
+        }
+
+
+        const level =
+            transaction.risk_level || "N/A";
+
+        const status =
+            transaction.status || "pending";
+
+
+        if (level === "Low") low++;
+
+        if (level === "Medium") medium++;
+
+        if (level === "High") high++;
+
+        if (level === "Critical") critical++;
+
+
+        if (
+            status === "review" ||
+            status === "flagged"
+        ) {
+            riskTransactions++;
+        }
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                <strong>
+                    ${escapeHtml(transaction.transaction_id)}
+                </strong>
+            </td>
+
+            <td>
+                ₹${formatNumber(transaction.amount)}
+            </td>
+
+            <td>
+                ${escapeHtml(transaction.transaction_type)}
+            </td>
+
+            <td>
+                ${escapeHtml(transaction.merchant_category)}
+            </td>
+
+            <td>
+                ${transaction.risk_score !== null
+                    ? transaction.risk_score
+                    : "N/A"}
+            </td>
+
+            <td class="${level.toLowerCase()}">
+                ${escapeHtml(level)}
+            </td>
+
+            <td>
+                <span class="badge ${status}">
+                    ${escapeHtml(status)}
+                </span>
+            </td>
+
+        `;
+
+        table.appendChild(row);
+
+    });
+
+
+    document.getElementById(
+        "totalTransactions"
+    ).textContent =
+        transactions.length;
+
+
+    document.getElementById(
+        "totalAmount"
+    ).textContent =
+        "₹" + formatNumber(totalAmount);
+
+
+    document.getElementById(
+        "riskTransactions"
+    ).textContent =
+        riskTransactions;
+
+
+    document.getElementById(
+        "averageRisk"
+    ).textContent =
+        riskCount
+            ? (totalRisk / riskCount).toFixed(2)
+            : "0";
+
+
+    document.getElementById(
+        "lowRisk"
+    ).textContent = low;
+
+    document.getElementById(
+        "mediumRisk"
+    ).textContent = medium;
+
+    document.getElementById(
+        "highRisk"
+    ).textContent = high;
+
+    document.getElementById(
+        "criticalRisk"
+    ).textContent = critical;
+
+}
+
+
+/* CREATE TRANSACTION */
+
+document
+    .getElementById("transactionForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            const message =
+                document.getElementById(
+                    "transactionMessage"
+                );
+
+            message.className =
+                "message hidden";
+
+
+            const transactionDate =
+                document.getElementById(
+                    "transactionDate"
+                ).value;
+
+
+            const payload = {
+
+                transaction_id:
+                    document.getElementById(
+                        "transactionId"
+                    ).value,
+
+                amount:
+                    parseFloat(
+                        document.getElementById(
+                            "amount"
+                        ).value
+                    ),
+
+                transaction_type:
+                    document.getElementById(
+                        "transactionType"
+                    ).value,
+
+                merchant_category:
+                    document.getElementById(
+                        "merchantCategory"
+                    ).value,
+
+                location:
+                    document.getElementById(
+                        "location"
+                    ).value || null,
+
+                device:
+                    document.getElementById(
+                        "device"
+                    ).value || null,
+
+                transaction_date:
+                    new Date(
+                        transactionDate
+                    ).toISOString()
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/api/transactions/`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body:
+                                JSON.stringify(payload)
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.detail ||
+                        "Transaction creation failed"
+                    );
+
+                }
+
+
+                message.textContent =
+                    `Transaction analyzed successfully. Risk: ${data.risk_level}, Score: ${data.risk_score}`;
+
+                message.className =
+                    "message success";
+
+
+                document
+                    .getElementById(
+                        "transactionForm"
+                    )
+                    .reset();
+
+
+                setDefaultDate();
+
+                await loadTransactions();
+
+
+            } catch (error) {
+
+                message.textContent =
+                    error.message;
+
+                message.className =
+                    "message failure";
+
+            }
+
+        }
+    );
+
+
+/* DEFAULT DATE */
+
+function setDefaultDate() {
+
+    const now =
+        new Date();
+
+    const local =
+        new Date(
+            now.getTime()
+            -
+            now.getTimezoneOffset() * 60000
+        )
+        .toISOString()
+        .slice(0, 16);
+
+    document.getElementById(
+        "transactionDate"
+    ).value = local;
+
+}
+
+
+/* NUMBER FORMAT */
+
+function formatNumber(value) {
+
+    return Number(value || 0)
+        .toLocaleString(
+            "en-IN",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+
+
+/* HTML SAFETY */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* AUTO LOGIN */
+
+if (token) {
+
+    showDashboard();
+
+}
+
+</script>
+
+</body>
+</html>

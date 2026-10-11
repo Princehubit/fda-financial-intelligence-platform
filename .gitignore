@@ -1,0 +1,43 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Machine learning models
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.joblib
+
+# Data
+data/raw/*
+data/processed/*
+
+# IDE
+.idea/
+.vscode/
+
+# Frontend
+node_modules/
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
