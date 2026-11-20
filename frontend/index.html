@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,20 +23,24 @@
             display: none !important;
         }
 
-        /* LOGIN */
+        /* AUTHENTICATION */
+
         #loginPage {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
             background: linear-gradient(135deg, #111827, #1e3a8a);
         }
 
         .login-card {
-            width: 420px;
-            max-width: 92%;
+            width: 440px;
+            max-width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
             background: white;
-            padding: 40px;
+            padding: 35px;
             border-radius: 18px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.25);
         }
@@ -60,14 +65,30 @@
         }
 
         .logo h1 {
-            font-size: 24px;
+            font-size: 23px;
             color: #111827;
         }
 
         .logo p {
             color: #6b7280;
             margin-top: 7px;
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        .auth-heading {
+            margin-bottom: 22px;
+        }
+
+        .auth-heading h2 {
+            font-size: 22px;
+            color: #111827;
+            margin-bottom: 7px;
+        }
+
+        .auth-heading p {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         label {
@@ -89,6 +110,7 @@
 
         input:focus, select:focus {
             border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.10);
         }
 
         button {
@@ -98,6 +120,11 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
+        }
+
+        button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
         }
 
         .primary-btn {
@@ -110,6 +137,55 @@
             background: #1d4ed8;
         }
 
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 65px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 7px;
+            padding: 5px 8px;
+            background: transparent;
+            color: #2563eb;
+            font-size: 12px;
+        }
+
+        .password-toggle:hover {
+            background: #eff6ff;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .text-btn {
+            background: none;
+            color: #2563eb;
+            padding: 4px;
+            font-size: 13px;
+        }
+
+        .text-btn:hover {
+            text-decoration: underline;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
         .error {
             color: #dc2626;
             background: #fee2e2;
@@ -119,7 +195,17 @@
             font-size: 13px;
         }
 
+        .success {
+            color: #166534;
+            background: #dcfce7;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
         /* DASHBOARD */
+
         .dashboard {
             min-height: 100vh;
         }
@@ -171,7 +257,8 @@
             color: #6b7280;
         }
 
-        /* CARDS */
+        /* STATISTICS */
+
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -198,6 +285,7 @@
         }
 
         /* MAIN GRID */
+
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 360px;
@@ -229,6 +317,7 @@
         }
 
         /* TABLE */
+
         .table-wrapper {
             overflow-x: auto;
         }
@@ -292,7 +381,8 @@
             font-weight: bold;
         }
 
-        /* FORM */
+        /* TRANSACTION FORM */
+
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -317,15 +407,12 @@
             border-radius: 8px;
         }
 
-        .success {
-            background: #dcfce7;
-            color: #166534;
-        }
-
         .failure {
             background: #fee2e2;
             color: #991b1b;
         }
+
+        /* RISK SUMMARY */
 
         .risk-summary {
             display: flex;
@@ -349,6 +436,8 @@
             font-size: 12px;
         }
 
+        /* RESPONSIVE */
+
         @media (max-width: 1000px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -360,6 +449,10 @@
         }
 
         @media (max-width: 600px) {
+            .login-card {
+                padding: 25px;
+            }
+
             .container {
                 padding: 15px;
             }
@@ -378,6 +471,11 @@
 
             .topbar {
                 padding: 15px;
+                gap: 12px;
+            }
+
+            .topbar h1 {
+                font-size: 16px;
             }
         }
     </style>
@@ -386,6 +484,7 @@
 <body>
 
 <!-- LOGIN PAGE -->
+
 <div id="loginPage">
 
     <div class="login-card">
@@ -396,31 +495,172 @@
             <p>Fraud Detection & Risk Assessment Platform</p>
         </div>
 
-        <div id="loginError" class="error hidden"></div>
+        <!-- LOGIN SECTION -->
 
-        <form id="loginForm">
+        <div id="loginSection">
 
-            <label>Email</label>
-            <input
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-                required
-            >
+            <div class="auth-heading">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your financial dashboard.</p>
+            </div>
 
-            <label>Password</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                required
-            >
+            <div id="loginError" class="error hidden"></div>
+            <div id="loginMessage" class="success hidden"></div>
 
-            <button class="primary-btn" type="submit">
-                Sign In
-            </button>
+            <form id="loginForm">
 
-        </form>
+                <label for="email">Email Address</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="password">Password</label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('password', this)"
+                    >Show</button>
+
+                </div>
+
+                <button class="primary-btn" type="submit">
+                    Sign In
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account?
+
+                <button
+                    type="button"
+                    class="text-btn"
+                    onclick="showRegisterForm()"
+                >
+                    Create Account
+                </button>
+            </p>
+
+        </div>
+
+        <!-- REGISTRATION SECTION -->
+
+        <div id="registerSection" class="hidden">
+
+            <div class="auth-heading">
+                <h2>Create Your Account</h2>
+                <p>Get started with FDA Financial Intelligence.</p>
+            </div>
+
+            <div id="registrationError" class="error hidden"></div>
+
+            <div id="registrationMessage" class="success hidden"></div>
+
+            <form id="registerForm">
+
+                <label for="registerFullName">Full Name</label>
+
+                <input
+                    type="text"
+                    id="registerFullName"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    minlength="2"
+                    maxlength="255"
+                    required
+                >
+
+                <label for="registerEmail">Email Address</label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="registerPassword">Password</label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Minimum 8 characters"
+                        autocomplete="new-password"
+                        minlength="8"
+                        maxlength="128"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('registerPassword', this)"
+                    >Show</button>
+
+                </div>
+
+                <label for="confirmPassword">Confirm Password</label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('confirmPassword', this)"
+                    >Show</button>
+
+                </div>
+
+                <button class="primary-btn" type="submit">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+
+                <button
+                    type="button"
+                    class="text-btn"
+                    onclick="showLoginForm()"
+                >
+                    Sign In
+                </button>
+            </p>
+
+        </div>
+
+        <div class="auth-footer">
+            FDA Financial Intelligence Platform
+        </div>
 
     </div>
 
@@ -428,6 +668,7 @@
 
 
 <!-- DASHBOARD -->
+
 <div id="dashboardPage" class="dashboard hidden">
 
     <header class="topbar">
@@ -443,14 +684,12 @@
 
     </header>
 
-
     <main class="container">
 
         <div class="welcome">
             <h2>Financial Risk Dashboard</h2>
             <p>Monitor transactions and identify potentially fraudulent activity.</p>
         </div>
-
 
         <!-- STATISTICS -->
 
@@ -477,7 +716,6 @@
             </div>
 
         </section>
-
 
         <div class="main-grid">
 
@@ -514,8 +752,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody id="transactionTable">
-                            </tbody>
+                            <tbody id="transactionTable"></tbody>
 
                         </table>
 
@@ -524,7 +761,6 @@
                 </section>
 
             </div>
-
 
             <!-- RIGHT -->
 
@@ -543,7 +779,7 @@
                         <div class="form-grid">
 
                             <div class="full">
-                                <label>Transaction ID</label>
+                                <label for="transactionId">Transaction ID</label>
                                 <input
                                     id="transactionId"
                                     placeholder="TXN-2026-0003"
@@ -552,10 +788,11 @@
                             </div>
 
                             <div>
-                                <label>Amount</label>
+                                <label for="amount">Amount</label>
                                 <input
                                     type="number"
                                     step="0.01"
+                                    min="0.01"
                                     id="amount"
                                     placeholder="5000"
                                     required
@@ -563,7 +800,7 @@
                             </div>
 
                             <div>
-                                <label>Type</label>
+                                <label for="transactionType">Type</label>
                                 <select id="transactionType">
                                     <option value="purchase">Purchase</option>
                                     <option value="transfer">Transfer</option>
@@ -573,7 +810,7 @@
                             </div>
 
                             <div class="full">
-                                <label>Merchant Category</label>
+                                <label for="merchantCategory">Merchant Category</label>
                                 <select id="merchantCategory">
                                     <option value="groceries">Groceries</option>
                                     <option value="electronics">Electronics</option>
@@ -586,7 +823,7 @@
                             </div>
 
                             <div>
-                                <label>Location</label>
+                                <label for="location">Location</label>
                                 <input
                                     id="location"
                                     placeholder="Bhubaneswar"
@@ -594,7 +831,7 @@
                             </div>
 
                             <div>
-                                <label>Device</label>
+                                <label for="device">Device</label>
                                 <input
                                     id="device"
                                     placeholder="MacBook-Air"
@@ -602,7 +839,7 @@
                             </div>
 
                             <div class="full">
-                                <label>Date & Time</label>
+                                <label for="transactionDate">Date & Time</label>
                                 <input
                                     type="datetime-local"
                                     id="transactionDate"
@@ -621,7 +858,6 @@
                     <div id="transactionMessage" class="message hidden"></div>
 
                 </section>
-
 
                 <!-- RISK SUMMARY -->
 
@@ -663,7 +899,6 @@
 
     </main>
 
-
     <div class="footer">
         FDA Financial Intelligence Platform © 2026
     </div>
@@ -673,9 +908,216 @@
 
 <script>
 
+"use strict";
+
 const API_BASE = "http://127.0.0.1:8000";
 
 let token = localStorage.getItem("fda_token");
+
+
+/* API ERROR HANDLING */
+
+async function getResponseData(response) {
+
+    const text = await response.text();
+
+    if (!text) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        throw new Error("The server returned an invalid response.");
+    }
+
+}
+
+function getErrorMessage(detail, fallback) {
+
+    if (Array.isArray(detail)) {
+        return detail
+            .map(item => item.msg || "Invalid input")
+            .join(", ");
+    }
+
+    if (typeof detail === "string") {
+        return detail;
+    }
+
+    return fallback;
+
+}
+
+
+/* AUTHENTICATION UI */
+
+function showRegisterForm() {
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("registerSection").classList.remove("hidden");
+
+    document.getElementById("loginError").classList.add("hidden");
+    document.getElementById("loginMessage").classList.add("hidden");
+
+    document.getElementById("registrationError").classList.add("hidden");
+    document.getElementById("registrationMessage").classList.add("hidden");
+
+}
+
+function showLoginForm() {
+
+    document.getElementById("registerSection").classList.add("hidden");
+    document.getElementById("loginSection").classList.remove("hidden");
+
+    document.getElementById("registrationError").classList.add("hidden");
+    document.getElementById("registrationMessage").classList.add("hidden");
+
+}
+
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+        button.textContent = "Hide";
+
+    } else {
+
+        input.type = "password";
+        button.textContent = "Show";
+
+    }
+
+}
+
+
+/* REGISTRATION */
+
+document
+    .getElementById("registerForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const form = this;
+
+        const submitButton =
+            form.querySelector('button[type="submit"]');
+
+        const fullName =
+            document.getElementById("registerFullName").value.trim();
+
+        const email =
+            document.getElementById("registerEmail").value.trim();
+
+        const password =
+            document.getElementById("registerPassword").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        const errorBox =
+            document.getElementById("registrationError");
+
+        const successBox =
+            document.getElementById("registrationMessage");
+
+        errorBox.classList.add("hidden");
+        successBox.classList.add("hidden");
+
+        if (fullName.length < 2) {
+
+            errorBox.textContent = "Please enter your full name.";
+            errorBox.classList.remove("hidden");
+            return;
+
+        }
+
+        if (password.length < 8 || password.length > 128) {
+
+            errorBox.textContent =
+                "Password must contain between 8 and 128 characters.";
+
+            errorBox.classList.remove("hidden");
+            return;
+
+        }
+
+        if (password !== confirmPassword) {
+
+            errorBox.textContent = "Passwords do not match.";
+            errorBox.classList.remove("hidden");
+            return;
+
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating Account...";
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/api/users/register`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        full_name: fullName,
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            const data = await getResponseData(response);
+
+            if (!response.ok) {
+
+                throw new Error(
+                    getErrorMessage(
+                        data.detail,
+                        "Registration failed."
+                    )
+                );
+
+            }
+
+            form.reset();
+
+            document.getElementById("email").value = email;
+
+            showLoginForm();
+
+            const loginMessage =
+                document.getElementById("loginMessage");
+
+            loginMessage.textContent =
+                "Account created successfully! Please sign in.";
+
+            loginMessage.classList.remove("hidden");
+
+        } catch (error) {
+
+            errorBox.textContent =
+                error.message || "Unable to create account.";
+
+            errorBox.classList.remove("hidden");
+
+        } finally {
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Create Account";
+
+        }
+
+    });
 
 
 /* LOGIN */
@@ -686,8 +1128,11 @@ document
 
         event.preventDefault();
 
+        const submitButton =
+            this.querySelector('button[type="submit"]');
+
         const email =
-            document.getElementById("email").value;
+            document.getElementById("email").value.trim();
 
         const password =
             document.getElementById("password").value;
@@ -695,7 +1140,14 @@ document
         const errorBox =
             document.getElementById("loginError");
 
+        const messageBox =
+            document.getElementById("loginMessage");
+
         errorBox.classList.add("hidden");
+        messageBox.classList.add("hidden");
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Signing In...";
 
         try {
 
@@ -715,29 +1167,39 @@ document
                 }
             );
 
-            const data = await response.json();
+            const data = await getResponseData(response);
 
             if (!response.ok) {
+
                 throw new Error(
-                    data.detail || "Login failed"
+                    getErrorMessage(data.detail, "Login failed.")
                 );
+
+            }
+
+            if (!data.access_token) {
+                throw new Error("The server did not return an access token.");
             }
 
             token = data.access_token;
 
-            localStorage.setItem(
-                "fda_token",
-                token
-            );
+            localStorage.setItem("fda_token", token);
+
+            document.getElementById("loginForm").reset();
 
             showDashboard();
 
         } catch (error) {
 
             errorBox.textContent =
-                error.message;
+                error.message || "Unable to sign in.";
 
             errorBox.classList.remove("hidden");
+
+        } finally {
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Sign In";
 
         }
 
@@ -779,6 +1241,8 @@ function logout() {
         .getElementById("loginPage")
         .classList.remove("hidden");
 
+    showLoginForm();
+
 }
 
 
@@ -796,8 +1260,7 @@ async function loadTransactions() {
             `${API_BASE}/api/transactions/`,
             {
                 headers: {
-                    "Authorization":
-                        `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`
                 }
             }
         );
@@ -810,17 +1273,28 @@ async function loadTransactions() {
 
         }
 
-        const transactions =
-            await response.json();
+        const transactions = await getResponseData(response);
+
+        if (!response.ok) {
+
+            throw new Error(
+                getErrorMessage(
+                    transactions.detail,
+                    "Unable to load transactions."
+                )
+            );
+
+        }
+
+        if (!Array.isArray(transactions)) {
+            throw new Error("Unexpected transaction response.");
+        }
 
         renderTransactions(transactions);
 
     } catch (error) {
 
-        console.error(
-            "Transaction loading error:",
-            error
-        );
+        console.error("Transaction loading error:", error);
 
     }
 
@@ -832,9 +1306,7 @@ async function loadTransactions() {
 function renderTransactions(transactions) {
 
     const table =
-        document.getElementById(
-            "transactionTable"
-        );
+        document.getElementById("transactionTable");
 
     table.innerHTML = "";
 
@@ -849,21 +1321,18 @@ function renderTransactions(transactions) {
 
     let riskTransactions = 0;
 
-
     transactions.forEach(transaction => {
 
         totalAmount +=
             parseFloat(transaction.amount || 0);
 
-        if (transaction.risk_score !== null) {
+        if (transaction.risk_score !== null &&
+            transaction.risk_score !== undefined) {
 
-            totalRisk +=
-                parseFloat(transaction.risk_score);
-
+            totalRisk += parseFloat(transaction.risk_score);
             riskCount++;
 
         }
-
 
         const level =
             transaction.risk_level || "N/A";
@@ -871,15 +1340,10 @@ function renderTransactions(transactions) {
         const status =
             transaction.status || "pending";
 
-
         if (level === "Low") low++;
-
         if (level === "Medium") medium++;
-
         if (level === "High") high++;
-
         if (level === "Critical") critical++;
-
 
         if (
             status === "review" ||
@@ -888,10 +1352,7 @@ function renderTransactions(transactions) {
             riskTransactions++;
         }
 
-
-        const row =
-            document.createElement("tr");
-
+        const row = document.createElement("tr");
 
         row.innerHTML = `
 
@@ -914,17 +1375,18 @@ function renderTransactions(transactions) {
             </td>
 
             <td>
-                ${transaction.risk_score !== null
-                    ? transaction.risk_score
+                ${transaction.risk_score !== null &&
+                  transaction.risk_score !== undefined
+                    ? escapeHtml(transaction.risk_score)
                     : "N/A"}
             </td>
 
-            <td class="${level.toLowerCase()}">
+            <td class="${escapeHtml(String(level).toLowerCase())}">
                 ${escapeHtml(level)}
             </td>
 
             <td>
-                <span class="badge ${status}">
+                <span class="badge ${escapeHtml(status)}">
                     ${escapeHtml(status)}
                 </span>
             </td>
@@ -935,48 +1397,28 @@ function renderTransactions(transactions) {
 
     });
 
-
     document.getElementById(
         "totalTransactions"
-    ).textContent =
-        transactions.length;
-
+    ).textContent = transactions.length;
 
     document.getElementById(
         "totalAmount"
-    ).textContent =
-        "₹" + formatNumber(totalAmount);
-
+    ).textContent = "₹" + formatNumber(totalAmount);
 
     document.getElementById(
         "riskTransactions"
-    ).textContent =
-        riskTransactions;
-
+    ).textContent = riskTransactions;
 
     document.getElementById(
         "averageRisk"
-    ).textContent =
-        riskCount
-            ? (totalRisk / riskCount).toFixed(2)
-            : "0";
+    ).textContent = riskCount
+        ? (totalRisk / riskCount).toFixed(2)
+        : "0";
 
-
-    document.getElementById(
-        "lowRisk"
-    ).textContent = low;
-
-    document.getElementById(
-        "mediumRisk"
-    ).textContent = medium;
-
-    document.getElementById(
-        "highRisk"
-    ).textContent = high;
-
-    document.getElementById(
-        "criticalRisk"
-    ).textContent = critical;
+    document.getElementById("lowRisk").textContent = low;
+    document.getElementById("mediumRisk").textContent = medium;
+    document.getElementById("highRisk").textContent = high;
+    document.getElementById("criticalRisk").textContent = critical;
 
 }
 
@@ -985,157 +1427,149 @@ function renderTransactions(transactions) {
 
 document
     .getElementById("transactionForm")
-    .addEventListener(
-        "submit",
-        async function(event) {
+    .addEventListener("submit", async function(event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            const message =
-                document.getElementById(
-                    "transactionMessage"
-                );
+        const form = this;
 
-            message.className =
-                "message hidden";
+        const submitButton =
+            form.querySelector('button[type="submit"]');
 
+        const message =
+            document.getElementById("transactionMessage");
 
-            const transactionDate =
-                document.getElementById(
-                    "transactionDate"
-                ).value;
+        message.className = "message hidden";
 
+        if (!token) {
+            message.textContent = "Please sign in again.";
+            message.className = "message failure";
+            logout();
+            return;
+        }
 
-            const payload = {
+        const transactionDate =
+            document.getElementById("transactionDate").value;
 
-                transaction_id:
-                    document.getElementById(
-                        "transactionId"
-                    ).value,
+        if (!transactionDate) {
+            message.textContent = "Please select a transaction date.";
+            message.className = "message failure";
+            return;
+        }
 
-                amount:
-                    parseFloat(
-                        document.getElementById(
-                            "amount"
-                        ).value
-                    ),
+        const parsedDate = new Date(transactionDate);
 
-                transaction_type:
-                    document.getElementById(
-                        "transactionType"
-                    ).value,
+        if (Number.isNaN(parsedDate.getTime())) {
+            message.textContent = "Invalid transaction date.";
+            message.className = "message failure";
+            return;
+        }
 
-                merchant_category:
-                    document.getElementById(
-                        "merchantCategory"
-                    ).value,
+        const payload = {
 
-                location:
-                    document.getElementById(
-                        "location"
-                    ).value || null,
+            transaction_id:
+                document.getElementById("transactionId").value.trim(),
 
-                device:
-                    document.getElementById(
-                        "device"
-                    ).value || null,
+            amount:
+                parseFloat(
+                    document.getElementById("amount").value
+                ),
 
-                transaction_date:
-                    new Date(
-                        transactionDate
-                    ).toISOString()
+            transaction_type:
+                document.getElementById("transactionType").value,
 
-            };
+            merchant_category:
+                document.getElementById("merchantCategory").value,
 
+            location:
+                document.getElementById("location").value.trim() || null,
 
-            try {
+            device:
+                document.getElementById("device").value.trim() || null,
 
-                const response =
-                    await fetch(
-                        `${API_BASE}/api/transactions/`,
-                        {
-                            method: "POST",
+            transaction_date:
+                parsedDate.toISOString()
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
+        };
 
-                                "Authorization":
-                                    `Bearer ${token}`
-                            },
+        submitButton.disabled = true;
+        submitButton.textContent = "Analyzing...";
 
-                            body:
-                                JSON.stringify(payload)
-                        }
-                    );
+        try {
 
+            const response = await fetch(
+                `${API_BASE}/api/transactions/`,
+                {
+                    method: "POST",
 
-                const data =
-                    await response.json();
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
 
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.detail ||
-                        "Transaction creation failed"
-                    );
-
+                    body: JSON.stringify(payload)
                 }
+            );
 
+            const data = await getResponseData(response);
 
-                message.textContent =
-                    `Transaction analyzed successfully. Risk: ${data.risk_level}, Score: ${data.risk_score}`;
+            if (response.status === 401) {
+                logout();
+                return;
+            }
 
-                message.className =
-                    "message success";
+            if (!response.ok) {
 
-
-                document
-                    .getElementById(
-                        "transactionForm"
+                throw new Error(
+                    getErrorMessage(
+                        data.detail,
+                        "Transaction creation failed."
                     )
-                    .reset();
-
-
-                setDefaultDate();
-
-                await loadTransactions();
-
-
-            } catch (error) {
-
-                message.textContent =
-                    error.message;
-
-                message.className =
-                    "message failure";
+                );
 
             }
 
+            message.textContent =
+                `Transaction analyzed successfully. Risk: ${data.risk_level}, Score: ${data.risk_score}`;
+
+            message.className = "message success";
+
+            form.reset();
+
+            setDefaultDate();
+
+            await loadTransactions();
+
+        } catch (error) {
+
+            message.textContent =
+                error.message || "Unable to create transaction.";
+
+            message.className = "message failure";
+
+        } finally {
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Analyze & Save Transaction";
+
         }
-    );
+
+    });
 
 
 /* DEFAULT DATE */
 
 function setDefaultDate() {
 
-    const now =
-        new Date();
+    const now = new Date();
 
-    const local =
-        new Date(
-            now.getTime()
-            -
-            now.getTimezoneOffset() * 60000
-        )
+    const local = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000
+    )
         .toISOString()
         .slice(0, 16);
 
-    document.getElementById(
-        "transactionDate"
-    ).value = local;
+    document.getElementById("transactionDate").value = local;
 
 }
 
@@ -1144,13 +1578,12 @@ function setDefaultDate() {
 
 function formatNumber(value) {
 
-    return Number(value || 0)
-        .toLocaleString(
-            "en-IN",
-            {
-                maximumFractionDigits: 2
-            }
-        );
+    return Number(value || 0).toLocaleString(
+        "en-IN",
+        {
+            maximumFractionDigits: 2
+        }
+    );
 
 }
 
@@ -1159,7 +1592,7 @@ function formatNumber(value) {
 
 function escapeHtml(value) {
 
-    return String(value)
+    return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
