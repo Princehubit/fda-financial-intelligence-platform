@@ -1,6 +1,8 @@
+
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +29,42 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator("app_env")
+    @classmethod
+    def normalize_app_env(cls, value: str) -> str:
+        return value.strip().lower()
+
+    @field_validator("jwt_secret_key")
+    @classmethod
+    def validate_jwt_secret(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("JWT secret key cannot be empty")
+        return value
+
+    @field_validator("jwt_algorithm")
+    @classmethod
+    def validate_jwt_algorithm(cls, value: str) -> str:
+        if value != "HS256":
+            raise ValueError("Only HS256 is currently supported")
+        return value
+
+    @field_validator("access_token_expire_minutes")
+    @classmethod
+    def validate_token_expiry(cls, value: int) -> int:
+        if not 1 <= value <= 1440:
+            raise ValueError(
+                "Token expiry must be between 1 and 1440 minutes"
+            )
+        return value
+
+    @model_validator(mode="after")
+    def validate_production_settings(self):
+        if self.app_env == "production" and self.debug:
+            raise ValueError(
+                "DEBUG must be false in production"
+            )
+        return self
 
     @property
     def cors_origin_list(self) -> list[str]:

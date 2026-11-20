@@ -1,3 +1,4 @@
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
@@ -28,7 +29,14 @@ def get_current_user(
 
         user_id = payload.get("sub")
 
-        if not user_id:
+        # Our application uses positive integer database user IDs.
+        if (
+            not isinstance(user_id, str)
+            or not user_id.isdecimal()
+            or len(user_id) > 10
+            or int(user_id) <= 0
+            or int(user_id) > 2147483647
+        ):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication token",
