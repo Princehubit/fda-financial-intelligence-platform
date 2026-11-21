@@ -436,6 +436,170 @@
             font-size: 12px;
         }
 
+
+        /* NOTIFICATION CONTROLS */
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification-bell {
+            position: relative;
+            background: #374151;
+            color: white;
+            font-size: 20px;
+            padding: 9px 13px;
+            border-radius: 9px;
+        }
+
+        .notification-bell:hover {
+            background: #4b5563;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            min-width: 19px;
+            height: 19px;
+            padding: 2px 5px;
+            border-radius: 20px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* NOTIFICATION INBOX PANEL */
+
+        .notification-panel {
+            position: absolute;
+            z-index: 1000;
+            top: 75px;
+            right: 30px;
+            width: 390px;
+            max-width: calc(100vw - 30px);
+            max-height: 75vh;
+            overflow-y: auto;
+            background: white;
+            color: #1f2937;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+        }
+
+        .notification-panel-header,
+        .notification-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .notification-panel-header h3 {
+            font-size: 18px;
+        }
+
+        .notification-panel button {
+            padding: 8px 10px;
+            background: #e5e7eb;
+            color: #1f2937;
+            font-size: 12px;
+        }
+
+        .notification-actions {
+            flex-wrap: wrap;
+        }
+
+        .notification-status {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .notification-item {
+            padding: 13px;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            margin-bottom: 9px;
+        }
+
+        .notification-item.unread {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .notification-item h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .notification-item p {
+            font-size: 13px;
+            line-height: 1.45;
+            color: #4b5563;
+            overflow-wrap: anywhere;
+        }
+
+        .notification-meta {
+            margin-top: 8px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .notification-settings {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .notification-settings h4 {
+            margin-bottom: 12px;
+        }
+
+        .notification-settings label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .notification-settings input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .notification-settings button {
+            background: #2563eb;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .notification-empty {
+            text-align: center;
+            color: #9ca3af;
+            padding: 22px 10px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .notification-panel {
+                position: fixed;
+                top: 75px;
+                right: 10px;
+            }
+
+            .topbar-actions {
+                gap: 7px;
+            }
+        }
         /* RESPONSIVE */
 
         @media (max-width: 1000px) {
@@ -678,13 +842,53 @@
             <p>AI-Powered Fraud Detection & Risk Assessment</p>
         </div>
 
-        <button class="logout-btn" onclick="logout()">
-            Logout
-        </button>
+        <div class="topbar-actions">
+            <button id="notificationBell" class="notification-bell" onclick="toggleNotificationPanel()" aria-label="Notifications">
+                🔔
+                <span id="notificationBadge" class="notification-badge hidden">0</span>
+            </button>
+
+            <button class="logout-btn" onclick="logout()">
+                Logout
+            </button>
+        </div>
 
     </header>
 
-    <main class="container">
+        <section id="notificationPanel" class="notification-panel hidden">
+            <div class="notification-panel-header">
+                <h3>Notifications</h3>
+                <button type="button" onclick="toggleNotificationPanel()">Close</button>
+            </div>
+
+            <div class="notification-actions">
+                <button type="button" onclick="loadNotifications()">Refresh</button>
+                <button type="button" onclick="markAllNotificationsRead()">Mark all as read</button>
+                <button type="button" onclick="toggleNotificationSettings()">Settings</button>
+            </div>
+
+            <div id="notificationStatus" class="notification-status">
+                Loading notifications...
+            </div>
+
+            <div id="notificationList" class="notification-list"></div>
+
+            <div id="notificationSettings" class="notification-settings hidden">
+                <h4>Notification Preferences</h4>
+
+                <label><input type="checkbox" id="prefEmail"> Email notifications</label>
+                <label><input type="checkbox" id="prefInApp"> In-app notifications</label>
+                <label><input type="checkbox" id="prefTransactions"> Transaction alerts</label>
+                <label><input type="checkbox" id="prefFraud"> Fraud alerts</label>
+                <label><input type="checkbox" id="prefSecurity"> Security alerts</label>
+
+                <button type="button" onclick="saveNotificationPreferences()">
+                    Save Preferences
+                </button>
+                <div id="preferenceStatus"></div>
+            </div>
+        </section>
+        <main class="container">
 
         <div class="welcome">
             <h2>Financial Risk Dashboard</h2>
@@ -900,7 +1104,7 @@
     </main>
 
     <div class="footer">
-        FDA Financial Intelligence Platform © 2026
+        FDA Financial Intelligence Platform Â© 2026
     </div>
 
 </div>
@@ -1206,6 +1410,121 @@ document
     });
 
 
+
+// ================= REAL-TIME NOTIFICATIONS =================
+
+function startNotificationPolling() {
+    if (notificationPollingTimer || !token) return;
+
+    updateUnreadCount();
+
+    notificationPollingTimer = setInterval(() => {
+        updateUnreadCount();
+
+        const panel = document.getElementById("notificationPanel");
+        if (panel && !panel.classList.contains("hidden")) {
+            loadNotifications();
+        }
+    }, 15000);
+}
+
+function stopNotificationPolling() {
+    if (notificationPollingTimer) {
+        clearInterval(notificationPollingTimer);
+        notificationPollingTimer = null;
+    }
+}
+
+function connectNotificationSocket() {
+    if (!token || notificationSocket) return;
+
+    const wsBase = API_BASE.replace(/^http/, "ws");
+    const socketUrl =
+        `${wsBase}/api/notifications/ws?token=${encodeURIComponent(token)}`;
+
+    try {
+        notificationSocket = new WebSocket(socketUrl);
+
+        notificationSocket.onopen = () => {
+            console.log("Notification WebSocket connected.");
+            stopNotificationPolling();
+
+            if (notificationReconnectTimer) {
+                clearTimeout(notificationReconnectTimer);
+                notificationReconnectTimer = null;
+            }
+
+            updateUnreadCount();
+        };
+
+        notificationSocket.onmessage = (event) => {
+            try {
+                const notification = JSON.parse(event.data);
+                console.log("New notification received:", notification);
+
+                updateUnreadCount();
+
+                const panel = document.getElementById("notificationPanel");
+                if (panel && !panel.classList.contains("hidden")) {
+                    loadNotifications();
+                }
+            } catch (error) {
+                console.error("Invalid notification message:", error);
+            }
+        };
+
+        notificationSocket.onerror = (error) => {
+            console.error("Notification WebSocket error:", error);
+        };
+
+        notificationSocket.onclose = () => {
+            notificationSocket = null;
+
+            if (!token) return;
+
+            startNotificationPolling();
+
+            if (!notificationReconnectTimer) {
+                notificationReconnectTimer = setTimeout(() => {
+                    notificationReconnectTimer = null;
+                    connectNotificationSocket();
+                }, 5000);
+            }
+        };
+
+    } catch (error) {
+        console.error("WebSocket connection failed:", error);
+        notificationSocket = null;
+        startNotificationPolling();
+    }
+}
+
+function startNotificationUpdates() {
+    if (!token) return;
+
+    updateUnreadCount();
+    connectNotificationSocket();
+    startNotificationPolling();
+}
+
+function stopNotificationUpdates() {
+    stopNotificationPolling();
+
+    if (notificationReconnectTimer) {
+        clearTimeout(notificationReconnectTimer);
+        notificationReconnectTimer = null;
+    }
+
+    if (notificationSocket) {
+        const socket = notificationSocket;
+        notificationSocket = null;
+        socket.onclose = null;
+        socket.close();
+    }
+}
+
+// ==========================================================
+
 /* SHOW DASHBOARD */
 
 function showDashboard() {
@@ -1222,12 +1541,15 @@ function showDashboard() {
 
     loadTransactions();
 
+
+    startNotificationUpdates();
 }
 
 
 /* LOGOUT */
 
 function logout() {
+    stopNotificationUpdates();
 
     localStorage.removeItem("fda_token");
 
@@ -1246,7 +1568,218 @@ function logout() {
 }
 
 
-/* LOAD TRANSACTIONS */
+
+// ================= NOTIFICATION SYSTEM =================
+
+let notificationSocket = null;
+let notificationPollingTimer = null;
+let notificationReconnectTimer = null;
+
+async function notificationApi(endpoint, options = {}) {
+    const response = await fetch(`${API_BASE}${endpoint}`, {
+        ...options,
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {})
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Notification API error: ${response.status}`);
+    }
+
+    if (response.status === 204) return null;
+    return response.json();
+}
+
+function toggleNotificationPanel() {
+    const panel = document.getElementById("notificationPanel");
+    if (!panel) return;
+
+    panel.classList.toggle("hidden");
+
+    if (!panel.classList.contains("hidden")) {
+        loadNotifications();
+    }
+}
+
+function toggleNotificationSettings() {
+    const settings = document.getElementById("notificationSettings");
+    if (!settings) return;
+
+    settings.classList.toggle("hidden");
+
+    if (!settings.classList.contains("hidden")) {
+        loadNotificationPreferences();
+    }
+}
+
+async function updateUnreadCount() {
+    if (!token) return;
+
+    try {
+        const data = await notificationApi("/api/notifications/unread-count");
+        const badge = document.getElementById("notificationBadge");
+
+        if (!badge) return;
+
+        const count = Number(data.unread_count || 0);
+        badge.textContent = count > 99 ? "99+" : String(count);
+        badge.classList.toggle("hidden", count === 0);
+    } catch (error) {
+        console.error("Unread count error:", error);
+    }
+}
+
+async function loadNotifications() {
+    const list = document.getElementById("notificationList");
+    const status = document.getElementById("notificationStatus");
+
+    if (!list || !status || !token) return;
+
+    status.textContent = "Loading notifications...";
+    list.replaceChildren();
+
+    try {
+        const data = await notificationApi("/api/notifications/");
+        const notifications = Array.isArray(data)
+            ? data
+            : (data.notifications || []);
+
+        status.textContent = `${notifications.length} notification(s)`;
+
+        if (notifications.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "notification-empty";
+            empty.textContent = "You're all caught up!";
+            list.appendChild(empty);
+        }
+
+        notifications.forEach(notification => {
+            const item = document.createElement("div");
+            item.className = "notification-item";
+            if (!notification.is_read) item.classList.add("unread");
+
+            const heading = document.createElement("h4");
+            heading.textContent = notification.title || "Notification";
+
+            const message = document.createElement("p");
+            message.textContent = notification.message || "";
+
+            const meta = document.createElement("div");
+            meta.className = "notification-meta";
+
+            const date = notification.created_at
+                ? new Date(notification.created_at).toLocaleString()
+                : "";
+
+            meta.textContent =
+                `${notification.category || "General"}${date ? " • " + date : ""}`;
+
+            item.append(heading, message, meta);
+
+            if (!notification.is_read) {
+                const readButton = document.createElement("button");
+                readButton.type = "button";
+                readButton.textContent = "Mark as read";
+                readButton.addEventListener("click", () => {
+                    markNotificationRead(notification.id);
+                });
+                item.appendChild(readButton);
+            }
+
+            list.appendChild(item);
+        });
+
+        await updateUnreadCount();
+
+    } catch (error) {
+        status.textContent = "Unable to load notifications.";
+        console.error("Notification loading error:", error);
+    }
+}
+
+async function markNotificationRead(notificationId) {
+    try {
+        await notificationApi(
+            `/api/notifications/${notificationId}/read`,
+            { method: "PATCH" }
+        );
+
+        await loadNotifications();
+    } catch (error) {
+        console.error("Mark notification read error:", error);
+    }
+}
+
+async function markAllNotificationsRead() {
+    try {
+        await notificationApi(
+            "/api/notifications/read-all",
+            { method: "PATCH" }
+        );
+
+        await loadNotifications();
+    } catch (error) {
+        console.error("Mark all notifications read error:", error);
+    }
+}
+
+async function loadNotificationPreferences() {
+    try {
+        const preferences = await notificationApi(
+            "/api/notifications/preferences"
+        );
+
+        document.getElementById("prefEmail").checked =
+            !!preferences.email_enabled;
+        document.getElementById("prefInApp").checked =
+            !!preferences.in_app_enabled;
+        document.getElementById("prefTransactions").checked =
+            !!preferences.transaction_alerts;
+        document.getElementById("prefFraud").checked =
+            !!preferences.fraud_alerts;
+        document.getElementById("prefSecurity").checked =
+            !!preferences.security_alerts;
+
+    } catch (error) {
+        console.error("Load notification preferences error:", error);
+        document.getElementById("preferenceStatus").textContent =
+            "Unable to load preferences.";
+    }
+}
+
+async function saveNotificationPreferences() {
+    const status = document.getElementById("preferenceStatus");
+
+    const preferences = {
+        email_enabled: document.getElementById("prefEmail").checked,
+        in_app_enabled: document.getElementById("prefInApp").checked,
+        transaction_alerts: document.getElementById("prefTransactions").checked,
+        fraud_alerts: document.getElementById("prefFraud").checked,
+        security_alerts: document.getElementById("prefSecurity").checked
+    };
+
+    try {
+        await notificationApi(
+            "/api/notifications/preferences",
+            {
+                method: "PATCH",
+                body: JSON.stringify(preferences)
+            }
+        );
+
+        status.textContent = "Preferences saved successfully.";
+    } catch (error) {
+        status.textContent = "Unable to save preferences.";
+        console.error("Save notification preferences error:", error);
+    }
+}
+
+// ======================================================
+
+        /* LOAD TRANSACTIONS */
 
 async function loadTransactions() {
 

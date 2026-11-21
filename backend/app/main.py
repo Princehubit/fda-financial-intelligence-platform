@@ -7,6 +7,7 @@ from app.api.transactions import router as transactions_router
 from app.api.users import router as users_router
 from app.core.config import get_settings
 from app.db.database import engine
+from app.api.notifications import router as notifications_router
 
 settings = get_settings()
 
@@ -30,6 +31,7 @@ app.add_middleware(
 app.include_router(users_router)
 app.include_router(auth_router)
 app.include_router(transactions_router)
+app.include_router(notifications_router)
 
 
 @app.get("/api/health")

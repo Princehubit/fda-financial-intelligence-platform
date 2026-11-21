@@ -5,7 +5,6 @@ from pathlib import Path
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -15,14 +14,20 @@ class Settings(BaseSettings):
     debug: bool = True
 
     database_url: str
-
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
     model_device: str = "mps"
-
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
+
+    # Optional SMTP configuration
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: str | None = None
+    smtp_from_email: str | None = None
+    smtp_use_tls: bool = True
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",
@@ -53,17 +58,34 @@ class Settings(BaseSettings):
     @classmethod
     def validate_token_expiry(cls, value: int) -> int:
         if not 1 <= value <= 1440:
-            raise ValueError(
-                "Token expiry must be between 1 and 1440 minutes"
-            )
+            raise ValueError("Token expiry must be between 1 and 1440 minutes")
+        return value
+
+    @field_validator(
+        "smtp_host",
+        "smtp_username",
+        "smtp_password",
+        "smtp_from_email",
+        mode="before",
+    )
+    @classmethod
+    def normalize_optional_smtp_values(cls, value):
+        if isinstance(value, str):
+            value = value.strip()
+            return value or None
+        return value
+
+    @field_validator("smtp_port")
+    @classmethod
+    def validate_smtp_port(cls, value: int) -> int:
+        if not 1 <= value <= 65535:
+            raise ValueError("SMTP port must be between 1 and 65535")
         return value
 
     @model_validator(mode="after")
     def validate_production_settings(self):
         if self.app_env == "production" and self.debug:
-            raise ValueError(
-                "DEBUG must be false in production"
-            )
+            raise ValueError("DEBUG must be false in production")
         return self
 
     @property
